@@ -1,0 +1,13 @@
+<!-- survey_question_create.html -->
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h2>Create a New Survey Question</h2>
+  
+  <!-- Form to add a new question -->
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Question</button>
+  </form>
+{% endblock %}

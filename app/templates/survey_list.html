@@ -1,0 +1,66 @@
+<!-- survey_list.html -->
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% block content %}
+    <div class="container">
+        <form method="post" action="{% url 'survey_list' survey.id %}" id="survey-form">
+            {% csrf_token %}
+            <!-- Include a hidden input field for survey.id -->
+            <input type="hidden" name="survey" value="{{ survey.id }}">
+
+            {% for field in form %}
+                {% if field.name != 'remarks' %}
+                    <div class="field">
+                        <label class="label">{{ field.label_tag }}</label>
+                        <div class="control">
+                            {{ field }}
+                            {{ field.errors }}
+                        </div>
+                    </div>
+
+                    <!-- Customized divider for each question -->
+                    <hr class="divider">
+                {% endif %}
+            {% endfor %}
+
+            <!-- Remarks field placed separately after the loop -->
+            <div class="field">
+                <label class="label">{{ form.remarks.label_tag }}</label>
+                <div class="control">
+                    <textarea class="textarea" name="{{ form.remarks.name }}" placeholder="{{ form.remarks.label }}"></textarea>
+                    {{ form.remarks.errors }}
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <button type="submit" class="button is-primary" onclick="return confirm('Are you sure you want to submit the survey?')">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <style>
+        /* Custom styling for the divider */
+        .divider {
+            border: 1px solid #ddd; /* Set border color */
+            margin: 10px 0; /* Set top and bottom margin */
+        }
+        /* Custom styling for the dropdown menus */
+        .star-rating {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        /* Custom styling for the divider */
+        .divider {
+            border: 1px solid #ddd;
+            margin: 10px 0;
+        }
+    </style>
+    
+{% endblock %}

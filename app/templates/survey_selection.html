@@ -1,0 +1,104 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+
+<div class="container">
+  <form method="get" action="{% url 'survey_statistics_with_id' 0 %}" id="filter-form" class="filter-form">
+
+    {% csrf_token %}
+
+    <div class="field">
+      <label for="start_date" class="label">Start Date:</label>
+      <div class="control">
+        <input type="text" id="start_date" name="start_date" class="input datepicker" value="{{ start_date }}" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="end_date" class="label">End Date:</label>
+      <div class="control">
+        <input type="text" id="end_date" name="end_date" class="input datepicker" value="{{ end_date }}" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="survey_id" class="label">Select Survey:</label>
+      <div class="control">
+        <div class="select">
+          <select id="survey_id" name="survey_id">
+            <option value="" selected>Select Survey</option>
+            {% for survey in surveys %}
+              <option value="{{ survey.id }}" {% if survey.id == selected_survey_id %}selected{% endif %}>{{ survey.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Hidden field for selected survey_id -->
+    <input type="hidden" id="selected_survey_id" name="selected_survey_id" value="{{ selected_survey_id }}" />
+
+    <div class="field is-grouped">
+      <div class="control">
+        <button type="button" id="view-statistics-btn" class="button is-info">View Statistics</button>
+      </div>
+      <div class="control">
+        <button type="button" id="generate-report-btn" class="button is-success">Generate Report</button>
+      </div>
+    </div>
+
+  </form>
+  <br>
+</div>
+
+<script>
+    $(document).ready(function () {
+      $(".datepicker").datepicker({
+        dateFormat: 'yy-mm-dd'
+      });
+  
+      // View Statistics Button Click Event
+      $("#view-statistics-btn").click(function () {
+        var selectedSurveyId = $("#survey_id").val();
+        var startDate = $("#start_date").val();
+        var endDate = $("#end_date").val();
+  
+        if (!selectedSurveyId) {
+          alert("Please select a survey before viewing statistics.");
+        } else if (!startDate || !endDate) {
+          alert("Please enter both start date and end date.");
+        } else {
+          $("#filter-form").attr("action", "{% url 'survey_statistics_with_id' 0 %}".replace("0", selectedSurveyId));
+          $("#filter-form").submit();
+        }
+      });
+  
+      // Generate Report Button Click Event
+      $("#generate-report-btn").click(function () {
+        var selectedSurveyId = $("#survey_id").val();
+        var startDate = $("#start_date").val();
+        var endDate = $("#end_date").val();
+  
+        if (!selectedSurveyId) {
+          alert("Please select a survey before generating the report.");
+        } else if (!startDate || !endDate) {
+          alert("Please enter both start date and end date.");
+        } else {
+          var url = "{% url 'survey_pdf_report_with_id' selected_survey_id=0 %}".replace("0", selectedSurveyId);
+          url += `?start_date=${startDate}&end_date=${endDate}`;
+  
+          window.open(url, '_blank');
+        }
+      });
+    });
+  </script>
+
+{% endblock %}

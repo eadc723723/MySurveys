@@ -1,0 +1,70 @@
+<!-- survey_create.html -->
+{% extends 'base_generic.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% if user.is_authenticated %}
+  <div class="container">
+    <h2 class="title is-2">Surveys</h2>
+
+    <!-- Display the list of surveys in a table -->
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>Survey Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for survey in surveys %}
+          <tr>
+            <td>{{ survey.name }}</td>
+            <td>
+              <div class="buttons">
+                <!-- Edit Form -->
+                <form method="get" action="{% url 'survey_edit' pk=survey.id %}">
+                  {% csrf_token %}
+                  <button type="submit" class="button is-info">Edit</button>
+                </form>
+                <div class="is-hidden-mobile" style="margin-right: 10px;"></div>
+                <!-- Delete Form with Confirmation Dialog -->
+                <form id="delete-form-{{ survey.id }}" method="post" action="{% url 'survey_delete' pk=survey.id %}" style="display: inline-block;">
+                  {% csrf_token %}
+                  <input type="hidden" name="survey_id" value="{{ survey.id }}">
+                  <button type="button" onclick="showConfirmationDialog('{{ survey.id }}')" class="button is-danger">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Form for creating a new survey -->
+    <div class="create-survey">
+      <h3 class="title is-3">Create a New Survey</h3>
+      <form method="post" action="{% url 'survey_management' %}" class="form">
+        {% csrf_token %}
+        {{ form|crispy }}
+
+        <button type="submit" class="button is-success">Create</button>
+      </form>
+    </div>
+  </div>
+
+{% else %}
+  <div class="container">
+    <h2 class="title is-2">Login to Access Surveys</h2>
+    <a href="{% url 'account_login' %}" class="button is-info">Login</a>
+  </div>
+{% endif %}
+
+  <!-- Confirmation Dialog Script -->
+  <script>
+    function showConfirmationDialog(surveyId) {
+      var confirmation = confirm("Are you sure you want to delete this survey?");
+      if (confirmation) {
+        document.getElementById('delete-form-' + surveyId).submit();
+      }
+    }
+  </script>
+{% endblock %}

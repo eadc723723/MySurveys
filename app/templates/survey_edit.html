@@ -1,0 +1,17 @@
+<!-- survey_edit.html -->
+{% extends 'base_generic.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <h2 class="title is-2">Edit Survey</h2>
+
+  <form method="post" action="{% url 'survey_edit' pk=survey.id %}">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <!-- Save Changes Button -->
+    <button type="submit" class="button is-success">Save Changes</button>
+
+    <!-- Cancel Button -->
+    <a href="{% url 'survey_management' %}" class="button is-dark">Cancel</a>
+  </form>
+{% endblock %}

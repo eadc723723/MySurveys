@@ -1,0 +1,92 @@
+{% extends 'base_generic.html' %}
+{% block content %}
+    <div class="container">
+        <h2 class="title is-2">{{ survey.name }} Statistics</h2>
+        {% if start_date and end_date %}
+            <p>Showing statistics for the date: <strong>{{ start_date }}</strong> to <strong>{{ end_date }}</strong></p>
+        {% endif %}
+        <br><br>
+        <h3 class="title is-3">Responses</h3>
+        <p>Total Responses: {{ total_responses }}</p>
+        <br><br>
+        <h3 class="title is-3">Question Star Counts</h3>
+        <div class="table-container">
+            <table class="table is-bordered">
+                <thead>
+                    <tr>
+                        <th>Question</th>
+                        <th>⭐</th>
+                        <th>⭐⭐</th>
+                        <th>⭐⭐⭐</th>
+                        <th>⭐⭐⭐⭐</th>
+                        <th>⭐⭐⭐⭐⭐</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for question in question_counts %}
+                        <tr>
+                            <td>{{ question.question_text }}</td>
+                            <td>{{ question.star_counts_1 }}</td>
+                            <td>{{ question.star_counts_2 }}</td>
+                            <td>{{ question.star_counts_3 }}</td>
+                            <td>{{ question.star_counts_4 }}</td>
+                            <td>{{ question.star_counts_5 }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% for response in responses %}
+            <!-- Displaying details for each response -->
+        {% endfor %}
+
+        <!-- Remarks -->
+        <h3 class="title is-3">Remarks</h3>
+        {% if remarks_page %}
+            <ul>
+                {% for remark_info in remarks_page %}
+                    <li>Remarks: {{ remark_info.remark }}</li>
+                    <!-- Add a divider between remarks -->
+                    <hr class="remark-divider">
+                {% endfor %}
+            </ul>
+
+            <!-- Pagination links -->
+            <nav class="pagination" role="navigation" aria-label="pagination">
+                {% if remarks_page.has_previous %}
+                    <a class="pagination-previous" href="?page=1{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}">First</a>
+                    <a class="pagination-previous" href="?page={{ remarks_page.previous_page_number }}{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}">Previous</a>
+                {% endif %}
+
+                <span class="pagination-ellipsis" aria-hidden="true">&hellip;</span>
+
+                <span class="pagination-info">
+                    Page {{ remarks_page.number }} of {{ remarks_page.paginator.num_pages }}.
+                </span>
+
+                <span class="pagination-ellipsis" aria-hidden="true">&hellip;</span>
+
+                {% if remarks_page.has_next %}
+                    <a class="pagination-next" href="?page={{ remarks_page.next_page_number }}{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}">Next</a>
+                    <a class="pagination-next" href="?page={{ remarks_page.paginator.num_pages }}{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}">Last</a>
+                {% endif %}
+            </nav>
+        {% else %}
+            <p>No remarks found.</p>
+        {% endif %}
+        <a class="button is-dark" href="{% url 'survey_selection' %}">Back</a>
+        
+    </div>
+    
+    <style>
+        .remark-divider {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+        }
+       
+        
+    </style>
+    
+{% endblock %}

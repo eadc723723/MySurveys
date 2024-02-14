@@ -1,0 +1,29 @@
+<!-- thank_you_page.html -->
+{% extends 'base.html' %}
+{% block content %}
+  <div class="container">
+    <table class="table is-fullwidth">
+      <tr>
+        <td class="has-text-centered">
+          <span class="icon has-text-success">
+            <i class="fas fa-check-circle fa-3x"></i>
+          </span>
+          <p class="title">Thank you for completing the survey!</p>
+        </td>
+      </tr>
+      <tr>
+        <td class="has-text-centered">
+          <form method="post" action="{% url 'survey_selection' %}">
+            {% csrf_token %}
+            <!-- <button type="submit" class="button is-info">Return to Survey Selection</button> -->
+          </form>
+        </td>
+      </tr>
+    </table>
+  </div><div><br><br><br><br><br><br><br><br></div>
+{% endblock %}
+
+
+
+
+

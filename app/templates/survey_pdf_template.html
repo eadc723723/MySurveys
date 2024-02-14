@@ -1,0 +1,102 @@
+<!-- survey_pdf_template.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ survey.name }} Survey Report</title>
+
+    <style>
+        @font-face {
+            font-family: 'YourCustomFont';
+            src: url('path/to/your/font.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            font-family: 'YourCustomFont', Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+
+
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #333;
+            padding-bottom: 5px;
+        }
+
+        h3 {
+            color: #333;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #222121;
+            padding: 8px;
+            text-align: left;
+        }
+
+        thead {
+            background-color: #f2f2f2;
+        }
+
+        p {
+            margin: 10px 0;
+        }
+
+        .question-column {
+        width: 50%; 
+        }
+    </style>
+</head>
+<body>
+    <h2>{{ survey.name }} Survey Report</h2>
+    <h4>Survey Report from {{ start_date|date:"Y-m-d" }} to {{ end_date|date:"Y-m-d" }}</h4>
+    <h3>Responses</h3>
+    <p>Total Responses: {{ total_responses }}</p>
+
+    <h3>Question Star Counts</h3>
+    <table>
+        <thead>
+            <tr>
+                <th class="question-column">Question</th>
+                <th style="text-align: center;">&#9733;</th> <!-- ★ -->
+                <th style="text-align: center;">&#9733;&#9733;</th> <!-- ★★ -->
+                <th style="text-align: center;">&#9733;&#9733;&#9733;</th> <!-- ★★★ -->
+                <th style="text-align: center;">&#9733;&#9733;&#9733;&#9733;</th> <!-- ★★★★ -->
+                <th style="text-align: center;">&#9733;&#9733;&#9733;&#9733;&#9733;</th> <!-- ★★★★★ -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for question in question_counts %}
+                <tr>
+                    <td class="question-column">{{ question.question_text }}</td>
+                    <td>{{ question.star_counts_1 }}</td>
+                    <td>{{ question.star_counts_2 }}</td>
+                    <td>{{ question.star_counts_3 }}</td>
+                    <td>{{ question.star_counts_4 }}</td>
+                    <td>{{ question.star_counts_5 }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Include other content, such as responses -->
+    <h3>Individual Responses</h3>
+    {% for response in responses %}
+        <div style="border: 1px solid #ddd; padding: 10px; margin-top: 10px;">
+            <p><strong>Response ID:</strong> {{ response.id }}<br><strong>Remarks:</strong> {{ response.remarks }}</p>
+            <!-- Include other response details -->
+        </div>
+    {% endfor %}
+
+</body>
+</html>
